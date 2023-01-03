@@ -59,6 +59,7 @@ public class FibonacciHeap
     	HeapNode new_heap_node = new HeapNode(key);
         if (this.isEmpty()) {
             this.min_node = new_heap_node;
+            new_heap_node.setNext(new_heap_node);
         }
         if (!this.isEmpty()) {
             ReplaceNodes(new_heap_node, this.first);
@@ -90,8 +91,26 @@ public class FibonacciHeap
     */
     public void deleteMin()
     {
-     	return; // should be replaced by student code
-     	
+        // turning min_node children into roots that are replacing it's place
+        this.min_node.getPrev().setNext(this.min_node.getChild());
+        this.min_node.getChild().getPrev().setNext(this.min_node.getNext());
+        // changing "mark" filed of the deleted node to false and changing their "parent" field to null
+        HeapNode child = this.min_node.getChild();
+        for (int i = 1; i <= this.min_node.getRank(); i++){
+            child.setMarked(false);
+            child.setParent(null);
+        }
+        // set deleted node child to be null
+        this.min_node.setChild(null);
+        // detach deleted node siblings
+        this.min_node.setNext(null);
+        this.min_node.setPrev(null);
+        // set new min node and do successive linking
+        this.min_node = SuccessiveLinkingAndFindMin();
+    }
+
+    private HeapNode SuccessiveLinkingAndFindMin(){
+
     }
 
    /**
@@ -291,6 +310,9 @@ public class FibonacciHeap
 
        public void setNext(HeapNode next) {
            this.next = next;
+           if(next != null){
+               next.setPrev(this);
+           }
        }
 
        public HeapNode getPrev() {
