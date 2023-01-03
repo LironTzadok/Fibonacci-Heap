@@ -62,19 +62,13 @@ public class FibonacciHeap
             new_heap_node.setNext(new_heap_node);
         }
         if (!this.isEmpty()) {
-            ReplaceNodes(new_heap_node, this.first);
+            this.first.getPrev().setNext(new_heap_node);
+            new_heap_node.setNext(this.first);
             FindNewMin(new_heap_node);
         }
         this.first = new_heap_node;
         this.size += 1;
         return new_heap_node;
-    }
-
-    private void ReplaceNodes (HeapNode h1, HeapNode h2) {
-        h1.setPrev(h2.getPrev());
-        h2.getPrev().setNext(h1);
-        h2.setPrev(h1);
-        h1.setNext(h2);
     }
 
     private void FindNewMin(HeapNode new_node) {
@@ -94,7 +88,7 @@ public class FibonacciHeap
         // turning min_node children into roots that are replacing it's place
         this.min_node.getPrev().setNext(this.min_node.getChild());
         this.min_node.getChild().getPrev().setNext(this.min_node.getNext());
-        // changing "mark" filed of the deleted node to false and changing their "parent" field to null
+        // changing "mark" field of the deleted node to false and changing their "parent" field to null
         HeapNode child = this.min_node.getChild();
         for (int i = 1; i <= this.min_node.getRank(); i++){
             child.setMarked(false);
