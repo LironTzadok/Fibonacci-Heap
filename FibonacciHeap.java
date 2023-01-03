@@ -56,7 +56,30 @@ public class FibonacciHeap
     */
     public HeapNode insert(int key)
     {    
-    	return new HeapNode(key); // should be replaced by student code
+    	HeapNode new_heap_node = new HeapNode(key);
+        if (this.isEmpty()) {
+            this.min_node = new_heap_node;
+        }
+        if (!this.isEmpty()) {
+            ReplaceNodes(new_heap_node, this.first);
+            FindNewMin(new_heap_node);
+        }
+        this.first = new_heap_node;
+        this.size += 1;
+        return new_heap_node;
+    }
+
+    private void ReplaceNodes (HeapNode h1, HeapNode h2) {
+        h1.setPrev(h2.getPrev());
+        h2.getPrev().setNext(h1);
+        h2.setPrev(h1);
+        h1.setNext(h2);
+    }
+
+    private void FindNewMin(HeapNode new_node) {
+        if (new_node.getKey() < this.min_node.getKey()) {
+            this.setMinNode(new_node);
+        }
     }
 
    /**
@@ -222,12 +245,12 @@ public class FibonacciHeap
 
     	public HeapNode(int key) {
     		this.key = key;
-            this.rank=0;
-            this.marked=false;
-            this.child=null;
-            this.next=null;
-            this.prev=null;
-            this.parent=null;
+            this.rank = 0;
+            this.marked = false;
+            this.child = null;
+            this.next = null;
+            this.prev = null;
+            this.parent = null;
     	}
 
     	public int getKey() {
