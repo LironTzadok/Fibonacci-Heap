@@ -8,12 +8,12 @@ public class FibonacciHeap
 
     private HeapNode min_node;
     private HeapNode first;
-    private int HeapNode_size;
+    private int size;
 
     public FibonacciHeap(){
         this.min_node=null;
         this.first=null;
-        this.HeapNode_size=0;
+        this.size=0;
     }
 
     public HeapNode getMin_node() {
@@ -33,11 +33,11 @@ public class FibonacciHeap
     }
 
     public int getHeapNode_size() {
-        return this.HeapNode_size;
+        return this.size;
     }
 
     public void setHeapNode_size(int heapNode_size) {
-        HeapNode_size = heapNode_size;
+        size = heapNode_size;
     }
 
    /**
@@ -48,7 +48,7 @@ public class FibonacciHeap
     */
     public boolean isEmpty()
     {
-    	return this.HeapNode_size==0;
+    	return this.size==0;
     }
 		
    /**
