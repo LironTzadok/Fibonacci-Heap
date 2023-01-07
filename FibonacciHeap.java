@@ -1,3 +1,4 @@
+import java.lang.Math;
 /**
  * FibonacciHeap
  *
@@ -61,7 +62,7 @@ public class FibonacciHeap
             this.min_node = new_heap_node;
             new_heap_node.setNext(new_heap_node);
         }
-        if (!this.isEmpty()) {
+        else {
             this.first.getPrev().setNext(new_heap_node);
             new_heap_node.setNext(this.first);
             FindNewMin(new_heap_node);
@@ -100,11 +101,81 @@ public class FibonacciHeap
         this.min_node.setNext(null);
         this.min_node.setPrev(null);
         // set new min node and do successive linking
-        this.min_node = SuccessiveLinkingAndFindMin();
+        this.min_node = SuccessiveLinking();
     }
 
-    private HeapNode SuccessiveLinkingAndFindMin(){
+    private HeapNode SuccessiveLinking(){
+        int log_n = (int)(Math.floor(Math.log(this.size) / Math.log(2)));
+        HeapNode[] buckets = new HeapNode[log_n];
+        HeapNode node = this.first;
+        int rank;
+        HeapNode node_after_link;
+        while (node != null) {
+            rank = node.getRank();
+            // node's rank bucket is empty
+            if(buckets[rank] == null){
+                buckets[rank] = node;
+                node = node.getNext();
+            }
+            else {
+                node_after_link = link(node, buckets[rank]);
+                buckets[rank] = null;
+                node = node_after_link;
+            }
+        }
+        HeapNode new_min = updateHeapFromBuckets(buckets);
+        return new_min;
+    }
 
+    private HeapNode updateHeapFromBuckets(HeapNode[] buckets) {
+        this.first = null;
+        this.size = 0;
+        HeapNode min = null;
+        HeapNode last_added_tree = null;
+        for (int i = 0; i < buckets.length; i++) {
+            if (buckets[i] != null) {
+                this.size += 1;
+                // if "first" filed hasn't been initialized
+                if (this.first == null) {
+                    this.first = buckets[i];
+                    last_added_tree = this.first;
+                    min = this.first;
+                }
+                else {
+                    last_added_tree.setNext(buckets[i]);
+                    if(buckets[i].getKey() < min.getKey()) {
+                        min = buckets[i];
+                    }
+                    last_added_tree = buckets[i];
+                }
+            }
+            last_added_tree.setNext(this.first);
+        }
+        return min;
+    }
+
+    private HeapNode link(HeapNode node1, HeapNode node2){
+        // make sure both trees are the same rank
+        if(node1.getRank() != node2.getRank()) {
+            return null;
+        }
+        HeapNode root;
+        HeapNode left_child;
+        HeapNode next = node1.getNext();
+        if(node1.getKey() < node2.getKey()) {
+            root = node1;
+            left_child = node2;
+        }
+        else {
+            root = node2;
+            left_child = node1;
+        }
+        left_child.setNext(root.getChild());
+        root.setChild(left_child);
+        root.setNext(next);
+        root.setRank(root.getRank() + 1);
+        // !!!!!!!!!!! check if we need to change left_child mark filed !!!!!!!!
+        return root;
     }
 
    /**
@@ -246,7 +317,7 @@ public class FibonacciHeap
     * (for example HeapNode), do it in this file, not in another file. 
     *  
     */
-    public static class HeapNode{
+    public static class HeapNode {
 
     	public int key;
         private int rank;
