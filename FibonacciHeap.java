@@ -1,4 +1,7 @@
 import java.lang.Math;
+import java.util.ArrayList;
+import java.util.Collections;
+
 /**
  * FibonacciHeap
  *
@@ -9,11 +12,13 @@ public class FibonacciHeap
     private HeapNode min_node;
     private HeapNode first;
     private int size;
+    private int roots_num;
 
     public FibonacciHeap(){
         this.min_node = null;
         this.first = null;
         this.size = 0;
+        this.roots_num = 0;
     }
 
     public HeapNode getMinNode() {
@@ -69,6 +74,7 @@ public class FibonacciHeap
         }
         this.first = new_heap_node;
         this.size += 1;
+        this.roots_num += 1;
         return new_heap_node;
     }
 
@@ -86,36 +92,63 @@ public class FibonacciHeap
     */
     public void deleteMin()
     {
-        // turning min_node children into roots that are replacing it's place
-        this.min_node.getPrev().setNext(this.min_node.getChild());
-        this.min_node.getChild().getPrev().setNext(this.min_node.getNext());
-        // changing "mark" field of the deleted node to false and changing their "parent" field to null
-        HeapNode child = this.min_node.getChild();
-        for (int i = 1; i <= this.min_node.getRank(); i++){
-            child.setMarked(false);
-            child.setParent(null);
+        // if min_node has children, they become roots
+        if (this.min_node.getRank() != 0) {
+            // if min_node is the only root in the heap, it's children become the only roots of the heap
+            if (this.roots_num == 1) {
+                this.first = this.min_node.getChild();
+            }
+            // min_node is not the only root in the heap, then it's children replace it in the list of roots of the heap
+            else {
+                this.min_node.getPrev().setNext(this.min_node.getChild());
+                this.min_node.getChild().getPrev().setNext(this.min_node.getNext());
+            }
+            // changing "mark" field of the deleted node's children to false and changing their "parent" field to null
+            HeapNode child = this.min_node.getChild();
+            for (int i = 1; i <= this.min_node.getRank(); i++){
+                child.setMarked(false);
+                child.setParent(null);
+                child = child.getNext();
+            }
+        }
+        // min node rank is 0
+        else {
+            // edge case, min_node is the last node in the heap
+            if(this.roots_num == 1) {
+                this.first = null;
+            }
+            this.min_node.getPrev().setNext(this.min_node.getNext());
         }
         // set deleted node child to be null
         this.min_node.setChild(null);
+        // if first was the deleted node, replace it with it's perv
+        if(this.first == this.min_node) {
+            this.first = this.min_node.getNext();
+        }
         // detach deleted node siblings
         this.min_node.setNext(null);
         this.min_node.setPrev(null);
+        // update counter fileds
+        this.roots_num -= 1;
+        this.size -= 1;
         // set new min node and do successive linking
         this.min_node = SuccessiveLinking();
     }
 
     private HeapNode SuccessiveLinking(){
-        int log_n = (int)(Math.floor(Math.log(this.size) / Math.log(2)));
+        int log_n = (int)(Math.ceil(Math.log(this.size + 1) / Math.log(2)));
+        int roots_num_copy = this.roots_num;
         HeapNode[] buckets = new HeapNode[log_n];
         HeapNode node = this.first;
         int rank;
         HeapNode node_after_link;
-        while (node != null) {
+        while (roots_num_copy > 0) {
             rank = node.getRank();
-            // node's rank bucket is empty
+            // if node's rank bucket is empty
             if(buckets[rank] == null){
                 buckets[rank] = node;
                 node = node.getNext();
+                roots_num_copy --;
             }
             else {
                 node_after_link = link(node, buckets[rank]);
@@ -129,12 +162,12 @@ public class FibonacciHeap
 
     private HeapNode updateHeapFromBuckets(HeapNode[] buckets) {
         this.first = null;
-        this.size = 0;
+        this.roots_num = 0;
         HeapNode min = null;
         HeapNode last_added_tree = null;
         for (int i = 0; i < buckets.length; i++) {
             if (buckets[i] != null) {
-                this.size += 1;
+                this.roots_num += 1;
                 // if "first" filed hasn't been initialized
                 if (this.first == null) {
                     this.first = buckets[i];
@@ -149,6 +182,8 @@ public class FibonacciHeap
                     last_added_tree = buckets[i];
                 }
             }
+        }
+        if (last_added_tree != null) {
             last_added_tree.setNext(this.first);
         }
         return min;
@@ -162,6 +197,7 @@ public class FibonacciHeap
         HeapNode root;
         HeapNode left_child;
         HeapNode next = node1.getNext();
+        HeapNode prev = node1.getPrev();
         if(node1.getKey() < node2.getKey()) {
             root = node1;
             left_child = node2;
@@ -170,7 +206,14 @@ public class FibonacciHeap
             root = node2;
             left_child = node1;
         }
-        left_child.setNext(root.getChild());
+        if (root.getRank() > 0) {
+            root.getChild().getPrev().setNext(left_child);
+            left_child.setNext(root.getChild());
+        }
+        else {
+            left_child.setNext(left_child);
+            left_child.setPrev(left_child);
+        }
         root.setChild(left_child);
         root.setNext(next);
         root.setRank(root.getRank() + 1);
@@ -186,7 +229,7 @@ public class FibonacciHeap
     */
     public HeapNode findMin()
     {
-    	return new HeapNode(678);// should be replaced by student code
+    	return this.min_node;
     } 
     
    /**
@@ -396,4 +439,33 @@ public class FibonacciHeap
            this.parent = parent;
        }
     }
+
+
+
+    public static void main(String[] args) {
+        FibonacciHeap fibonacciHeap = new FibonacciHeap();
+
+        ArrayList<Integer> numbers = new ArrayList<>();
+
+        for (int i = 0; i < 5; i++) {
+            numbers.add(i);
+        }
+
+        Collections.shuffle(numbers);
+        System.out.println(numbers);
+        for (int i = 0; i < 5; i++) {
+            fibonacciHeap.insert(numbers.get(i));
+        }
+
+        for (int i = 0; i < 5; i++) {
+            if (fibonacciHeap.findMin().getKey() != i) {
+                System.out.println(i);
+                System.out.println(fibonacciHeap.findMin().getKey());
+                System.out.println("wrong");
+                return;
+            }
+            fibonacciHeap.deleteMin();
+        }
+    }
+
 }
