@@ -90,22 +90,25 @@ public class FibonacciHeap
     * Deletes the node containing the minimum key.
     *
     */
-    public void deleteMin()
-    {
+    public void deleteMin() {
+        HeapNode min = this.min_node;
+        HeapNode child = min.getChild();
+        HeapNode next = min.getNext();
+        HeapNode prev = min.getPrev();
+
         // if min_node has children, they become roots
-        if (this.min_node.getRank() != 0) {
+        if (min.getRank() != 0) {
             // if min_node is the only root in the heap, it's children become the only roots of the heap
             if (this.roots_num == 1) {
-                this.first = this.min_node.getChild();
+                this.first = child;
             }
             // min_node is not the only root in the heap, then it's children replace it in the list of roots of the heap
             else {
-                this.min_node.getPrev().setNext(this.min_node.getChild());
-                this.min_node.getChild().getPrev().setNext(this.min_node.getNext());
+                prev.setNext(child);
+                child.getPrev().setNext(next);
             }
             // changing "mark" field of the deleted node's children to false and changing their "parent" field to null
-            HeapNode child = this.min_node.getChild();
-            for (int i = 1; i <= this.min_node.getRank(); i++){
+            for (int i = 1; i <= min.getRank(); i++){
                 child.setMarked(false);
                 child.setParent(null);
                 child = child.getNext();
@@ -113,21 +116,24 @@ public class FibonacciHeap
         }
         // min node rank is 0
         else {
-            // edge case, min_node is the last node in the heap
-            if(this.roots_num == 1) {
+            // the deleted root is the last one in the heap
+            if (this.roots_num == 1) {
                 this.first = null;
             }
-            this.min_node.getPrev().setNext(this.min_node.getNext());
+            // connect deleted root siblings
+            else {
+                prev.setNext(next);
+            }
         }
         // set deleted node child to be null
-        this.min_node.setChild(null);
+        min.setChild(null);
         // if first was the deleted node, replace it with it's perv
-        if(this.first == this.min_node) {
-            this.first = this.min_node.getNext();
+        if(this.first == min) {
+            this.first = next;
         }
         // detach deleted node siblings
-        this.min_node.setNext(null);
-        this.min_node.setPrev(null);
+        min.setNext(null);
+        min.setPrev(null);
         // update counter fileds
         this.roots_num -= 1;
         this.size -= 1;
@@ -135,13 +141,19 @@ public class FibonacciHeap
         this.min_node = SuccessiveLinking();
     }
 
-    private HeapNode SuccessiveLinking(){
+
+    private HeapNode SuccessiveLinking() {
+
         int log_n = (int)(Math.ceil(Math.log(this.size + 1) / Math.log(2)));
         int roots_num_copy = this.roots_num;
         HeapNode[] buckets = new HeapNode[log_n];
         HeapNode node = this.first;
         int rank;
         HeapNode node_after_link;
+        // if heap is empty
+        if (node == null) {
+            return null;
+        }
         while (roots_num_copy > 0) {
             rank = node.getRank();
             // if node's rank bucket is empty
