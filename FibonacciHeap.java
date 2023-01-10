@@ -1,3 +1,4 @@
+import java.io.PrintStream;
 import java.lang.Math;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,6 +10,7 @@ import java.util.Collections;
  */
 public class FibonacciHeap
 {
+    static final PrintStream stream = System.out;
     private HeapNode min_node;
     private HeapNode first;
     private int size;
@@ -135,7 +137,7 @@ public class FibonacciHeap
         min.setNext(null);
         min.setPrev(null);
         // update counter fileds
-        this.roots_num -= 1;
+        this.roots_num = this.roots_num + min.getRank() - 1;
         this.size -= 1;
         // set new min node and do successive linking
         this.min_node = SuccessiveLinking();
@@ -467,16 +469,15 @@ public class FibonacciHeap
         for (int i = 0; i < 5; i++) {
             fibonacciHeap.insert(numbers.get(i));
         }
-
         for (int i = 0; i < 5; i++) {
             if (fibonacciHeap.findMin().getKey() != i) {
                 System.out.println(i);
-                System.out.println(fibonacciHeap.findMin().getKey());
                 System.out.println("wrong");
                 return;
             }
             fibonacciHeap.deleteMin();
         }
+
     }
 
 }

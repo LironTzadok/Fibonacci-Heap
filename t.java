@@ -51,7 +51,7 @@
 //                String.format(" Marked: %b ", heapNode.isMarked()),
 //                String.format(" Parent: %s ", keyify.apply(heapNode::getParent)),
 //                String.format(" Next: %s ", keyify.apply(heapNode::getNext)),
-//                String.format(" Prev: %s ", keyify.apply(heapNode::getPrevious)),
+//                String.format(" Prev: %s ", keyify.apply(heapNode::getPrev)),
 //                String.format(" Child: %s", keyify.apply(heapNode::getChild))
 //        );
 //
@@ -121,7 +121,7 @@
 //        stream.println("╮");
 //        ArrayList<Boolean> list = new ArrayList<>();
 //        list.add(false);
-//        printHeapNode(heap.first, null, list, verbose);
+//        printHeapNode(heap.getFirst(), null, list, verbose);
 //    }
 //
 //    public static void demo() {
