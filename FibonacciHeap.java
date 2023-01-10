@@ -148,6 +148,7 @@ public class FibonacciHeap
         int roots_num_copy = this.roots_num;
         HeapNode[] buckets = new HeapNode[log_n];
         HeapNode node = this.first;
+        HeapNode tmp = node.getNext();
         int rank;
         HeapNode node_after_link;
         // if heap is empty
@@ -159,7 +160,8 @@ public class FibonacciHeap
             // if node's rank bucket is empty
             if(buckets[rank] == null){
                 buckets[rank] = node;
-                node = node.getNext();
+                node = tmp;
+                tmp = tmp.getNext();
                 roots_num_copy --;
             }
             else {
@@ -209,7 +211,6 @@ public class FibonacciHeap
         HeapNode root;
         HeapNode left_child;
         HeapNode next = node1.getNext();
-        //HeapNode prev = node1.getPrev();
         if(node1.getKey() < node2.getKey()) {
             root = node1;
             left_child = node2;
@@ -224,10 +225,8 @@ public class FibonacciHeap
         }
         else {
             left_child.setNext(left_child);
-            left_child.setPrev(left_child);
         }
         root.setChild(left_child);
-        root.setNext(next);
         root.setRank(root.getRank() + 1);
         // !!!!!!!!!!! check if we need to change left_child mark filed !!!!!!!!
         return root;
@@ -459,16 +458,11 @@ public class FibonacciHeap
 
         ArrayList<Integer> numbers = new ArrayList<>();
 
-        /*for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 5; i++) {
             numbers.add(i);
-        }*/
+        }
 
-        //Collections.shuffle(numbers);
-        numbers.add(0);
-        numbers.add(1);
-        numbers.add(3);
-        numbers.add(2);
-        numbers.add(4);
+        Collections.shuffle(numbers);
         System.out.println(numbers);
         for (int i = 0; i < 5; i++) {
             fibonacciHeap.insert(numbers.get(i));
