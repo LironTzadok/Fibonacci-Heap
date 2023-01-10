@@ -168,11 +168,11 @@ public class FibonacciHeap
                 node = node_after_link;
             }
         }
-        HeapNode new_min = updateHeapFromBuckets(buckets);
+        HeapNode new_min = createHeapAndFindMin(buckets);
         return new_min;
     }
 
-    private HeapNode updateHeapFromBuckets(HeapNode[] buckets) {
+    private HeapNode createHeapAndFindMin(HeapNode[] buckets) {
         this.first = null;
         this.roots_num = 0;
         HeapNode min = null;
@@ -422,6 +422,7 @@ public class FibonacciHeap
 
        public void setChild(HeapNode child) {
            this.child = child;
+           child.setParent(this);
        }
 
        public HeapNode getNext() {
