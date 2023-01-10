@@ -209,7 +209,7 @@ public class FibonacciHeap
         HeapNode root;
         HeapNode left_child;
         HeapNode next = node1.getNext();
-        HeapNode prev = node1.getPrev();
+        //HeapNode prev = node1.getPrev();
         if(node1.getKey() < node2.getKey()) {
             root = node1;
             left_child = node2;
@@ -422,7 +422,6 @@ public class FibonacciHeap
 
        public void setChild(HeapNode child) {
            this.child = child;
-           child.setParent(this);
        }
 
        public HeapNode getNext() {
@@ -460,11 +459,16 @@ public class FibonacciHeap
 
         ArrayList<Integer> numbers = new ArrayList<>();
 
-        for (int i = 0; i < 5; i++) {
+        /*for (int i = 0; i < 5; i++) {
             numbers.add(i);
-        }
+        }*/
 
-        Collections.shuffle(numbers);
+        //Collections.shuffle(numbers);
+        numbers.add(0);
+        numbers.add(1);
+        numbers.add(3);
+        numbers.add(2);
+        numbers.add(4);
         System.out.println(numbers);
         for (int i = 0; i < 5; i++) {
             fibonacciHeap.insert(numbers.get(i));
