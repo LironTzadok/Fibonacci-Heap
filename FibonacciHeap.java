@@ -10,17 +10,18 @@ import java.util.Collections;
  */
 public class FibonacciHeap
 {
-    static final PrintStream stream = System.out;
     private HeapNode min_node;
     private HeapNode first;
     private int size;
     private int roots_num;
+    private int marked_num;
 
     public FibonacciHeap(){
         this.min_node = null;
         this.first = null;
         this.size = 0;
         this.roots_num = 0;
+        this.marked_num=0;
     }
 
     public HeapNode getMinNode() {
@@ -41,6 +42,14 @@ public class FibonacciHeap
 
     public void setSize(int size) {
         this.size = size;
+    }
+
+    public int getRootsNum() {
+        return this.roots_num;
+    }
+
+    public int getMarkedNum(){
+        return this.marked_num;
     }
 
    /**
@@ -109,12 +118,15 @@ public class FibonacciHeap
             }
             // min_node is not the only root in the heap, then it's children replace it in the list of roots of the heap
             else {
-                prev.setNext(child);
                 child.getPrev().setNext(next);
+                prev.setNext(child);
             }
             // changing "mark" field of the deleted node's children to false and changing their "parent" field to null
             for (int i = 1; i <= min.getRank(); i++){
-                child.setMarked(false);
+                if (child.marked){
+                    child.setMarked(false);
+                    this.marked_num--;
+                }
                 child.setParent(null);
                 child = child.getNext();
             }
@@ -140,7 +152,7 @@ public class FibonacciHeap
         min.setNext(null);
         min.setPrev(null);
         // update counter fileds
-        this.roots_num = this.roots_num + min.getRank() - 1;
+        this.roots_num += min.getRank() - 1;
         this.size -= 1;
         // set new min node and do successive linking
         this.min_node = SuccessiveLinking();
@@ -215,7 +227,6 @@ public class FibonacciHeap
         }
         HeapNode root;
         HeapNode left_child;
-        HeapNode next = node1.getNext();
         if(node1.getKey() < node2.getKey()) {
             root = node1;
             left_child = node2;
@@ -232,6 +243,7 @@ public class FibonacciHeap
             left_child.setNext(left_child);
         }
         root.setChild(left_child);
+        left_child.setParent(root);
         root.setRank(root.getRank() + 1);
         // !!!!!!!!!!! check if we need to change left_child mark filed !!!!!!!!
         return root;
@@ -256,7 +268,29 @@ public class FibonacciHeap
     */
     public void meld (FibonacciHeap heap2)
     {
-    	  return; // should be replaced by student code   		
+        //if one of the heaps are empty:
+        if (heap2.isEmpty()){
+            return;
+        }
+        if (this.isEmpty()){
+            this.first=heap2.getFirst();
+            this.min_node=heap2.getMinNode();
+        }
+        else {
+            //melding the two heaps one after another:
+            HeapNode last_node_in_this_heap = this.first.prev;
+            HeapNode last_node_in_heap2 = heap2.getFirst().getPrev();
+            last_node_in_this_heap.setNext(heap2.getFirst());
+            last_node_in_heap2.setNext(this.first);
+            //updating the new min_node:
+            if (heap2.getMinNode().getKey() < this.min_node.getKey()){
+                this.min_node = heap2.getMinNode();
+            }
+        }
+        //updating fields size, roots_num and marked_num:
+        this.size += heap2.size();
+        this.roots_num += heap2.getRootsNum();
+        this.marked_num += heap2.getMarkedNum();
     }
 
    /**
@@ -312,8 +346,8 @@ public class FibonacciHeap
     * This function returns the current number of non-marked items in the heap
     */
     public int nonMarked() 
-    {    
-        return -232; // should be replaced by student code
+    {
+        return this.size-this.marked_num;
     }
 
    /**
@@ -327,7 +361,7 @@ public class FibonacciHeap
     */
     public int potential() 
     {    
-        return -234; // should be replaced by student code
+        return this.roots_num + 2*this.marked_num;
     }
 
    /**
@@ -459,33 +493,51 @@ public class FibonacciHeap
 
 
     public static void main(String[] args) {
+
         FibonacciHeap fibonacciHeap = new FibonacciHeap();
+        fibonacciHeap.insert(1);
+        fibonacciHeap.insert(2);
+        fibonacciHeap.insert(4);
+        fibonacciHeap.insert(435);
+        fibonacciHeap.deleteMin();
 
-        ArrayList<Integer> numbers = new ArrayList<>();
-
+//        ArrayList<Integer> numbers = new ArrayList<>();
+//
 //        numbers.add(1);
 //        numbers.add(2);
 //        numbers.add(4);
 //        numbers.add(3);
 //        numbers.add(0);
+//
+//        for (int i = 0; i < 5; i++) {
+//            numbers.add(i);
+//        }
+//
+//        Collections.shuffle(numbers);
 
-        for (int i = 0; i < 5; i++) {
-            numbers.add(i);
-        }
-
-        Collections.shuffle(numbers);
-        System.out.println(numbers);
-        for (int i = 0; i < 5; i++) {
-            fibonacciHeap.insert(numbers.get(i));
-        }
-        for (int i = 0; i < 5; i++) {
-            if (fibonacciHeap.findMin().getKey() != i) {
-                System.out.println(i);
-                System.out.println("wrong");
-                return;
-            }
-            fibonacciHeap.deleteMin();
-        }
+//        numbers.add(1);
+//        numbers.add(0);
+//        numbers.add(3);
+//        numbers.add(2);
+//        numbers.add(4);
+//        System.out.println(numbers);
+//        ;
+//
+//        for (int i = 0; i < 5; i++) {
+//            fibonacciHeap.insert(numbers.get(i));
+//        }
+//        fibonacciHeap.deleteMin();
+//        fibonacciHeap.deleteMin();
+//        fibonacciHeap.deleteMin();
+//
+//        /*for (int i = 0; i < 5; i++) {
+//            if (fibonacciHeap.findMin().getKey() != i) {
+//                System.out.println(i);
+//                System.out.println("wrong");
+//                return;
+//            }
+//            fibonacciHeap.deleteMin();
+//        }*/
 
 
     }
