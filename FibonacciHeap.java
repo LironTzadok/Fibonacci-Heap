@@ -93,6 +93,9 @@ public class FibonacciHeap
     *
     */
     public void deleteMin() {
+        if (this.isEmpty()) {
+            return;
+        }
         HeapNode min = this.min_node;
         HeapNode child = min.getChild();
         HeapNode next = min.getNext();
@@ -150,13 +153,13 @@ public class FibonacciHeap
         int roots_num_copy = this.roots_num;
         HeapNode[] buckets = new HeapNode[log_n];
         HeapNode node = this.first;
-        HeapNode tmp = node.getNext();
-        int rank;
-        HeapNode node_after_link;
         // if heap is empty
         if (node == null) {
             return null;
         }
+        HeapNode tmp = node.getNext();
+        int rank;
+        HeapNode node_after_link;
         while (roots_num_copy > 0) {
             rank = node.getRank();
             // if node's rank bucket is empty
@@ -460,18 +463,18 @@ public class FibonacciHeap
 
         ArrayList<Integer> numbers = new ArrayList<>();
 
-        numbers.add(1);
-        numbers.add(2);
-        numbers.add(4);
-        numbers.add(3);
-        numbers.add(0);
+//        numbers.add(1);
+//        numbers.add(2);
+//        numbers.add(4);
+//        numbers.add(3);
+//        numbers.add(0);
 
-//        for (int i = 0; i < 5; i++) {
-//            numbers.add(i);
-//        }
+        for (int i = 0; i < 5; i++) {
+            numbers.add(i);
+        }
 
-        //Collections.shuffle(numbers);
-        //System.out.println(numbers);
+        Collections.shuffle(numbers);
+        System.out.println(numbers);
         for (int i = 0; i < 5; i++) {
             fibonacciHeap.insert(numbers.get(i));
         }
@@ -483,6 +486,7 @@ public class FibonacciHeap
             }
             fibonacciHeap.deleteMin();
         }
+
 
     }
 
