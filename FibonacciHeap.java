@@ -460,12 +460,18 @@ public class FibonacciHeap
 
         ArrayList<Integer> numbers = new ArrayList<>();
 
-        for (int i = 0; i < 5; i++) {
-            numbers.add(i);
-        }
+        numbers.add(1);
+        numbers.add(2);
+        numbers.add(4);
+        numbers.add(3);
+        numbers.add(0);
 
-        Collections.shuffle(numbers);
-        System.out.println(numbers);
+//        for (int i = 0; i < 5; i++) {
+//            numbers.add(i);
+//        }
+
+        //Collections.shuffle(numbers);
+        //System.out.println(numbers);
         for (int i = 0; i < 5; i++) {
             fibonacciHeap.insert(numbers.get(i));
         }
