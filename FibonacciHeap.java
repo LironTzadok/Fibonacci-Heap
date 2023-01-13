@@ -24,31 +24,56 @@ public class FibonacciHeap
         this.marked_num=0;
     }
 
-
+    /**
+     * public HeapNode getMinNode()
+     *
+     * Returns the min root in the roots list of the heap
+     */
     public HeapNode getMinNode() {
         return this.min_node;
     }
 
-    public void setMinNode(HeapNode min_node) {
-        this.min_node = min_node;
-    }
-
+    /**
+     * public HeapNode getFirst()
+     *
+     * Returns the first root in the roots list of the heap
+     */
     public HeapNode getFirst() {
         return this.first;
     }
 
+    /**
+     * public void setFirst()
+     *
+     * sets first filed to a given node
+     */
     public void setFirst(HeapNode first) {
         this.first = first;
     }
 
+    /**
+     * public void setSize()
+     *
+     * sets size filed to a given number
+     */
     public void setSize(int size) {
         this.size = size;
     }
 
+    /**
+     * public int getRootsNum()
+     *
+     * returns the number of roots in the heap
+     */
     public int getRootsNum() {
         return this.roots_num;
     }
 
+    /**
+     * public int getMarkedNum()
+     *
+     * ???
+     */
     public int getMarkedNum(){
         return this.marked_num;
     }
@@ -57,7 +82,6 @@ public class FibonacciHeap
     * public boolean isEmpty()
     *
     * Returns true if and only if the heap is empty.
-    *   
     */
     public boolean isEmpty()
     {
@@ -69,7 +93,7 @@ public class FibonacciHeap
     *
     * Creates a node (of type HeapNode) which contains the given key, and inserts it into the heap.
     * The added key is assumed not to already belong to the heap.  
-    * 
+    * time complexity O(1)
     * Returns the newly created node.
     */
     public HeapNode insert(int key)
@@ -82,7 +106,9 @@ public class FibonacciHeap
         else {
             this.first.getPrev().setNext(new_heap_node);
             new_heap_node.setNext(this.first);
-            FindNewMin(new_heap_node);
+            if (new_heap_node.getKey() < this.min_node.getKey()) {
+                this.min_node = new_heap_node;
+            }
         }
         this.first = new_heap_node;
         this.size += 1;
@@ -90,17 +116,12 @@ public class FibonacciHeap
         return new_heap_node;
     }
 
-    private void FindNewMin(HeapNode new_node) {
-        if (new_node.getKey() < this.min_node.getKey()) {
-            this.setMinNode(new_node);
-        }
-    }
-
    /**
     * public void deleteMin()
     *
     * Deletes the node containing the minimum key.
     *
+    * time complexity: WC O(n), amortized O(log n)
     */
     public void deleteMin() {
         if (this.isEmpty()) {
@@ -159,9 +180,17 @@ public class FibonacciHeap
         this.min_node = SuccessiveLinking();
     }
 
-
+    /**
+     * private HeapNode SuccessiveLinking()
+     *
+     * goes throw all heap roots and links every two trees that have the same rank.
+     * when a tree doesn't have a tree to be linked to, it stays in buckets[i] when i = rank.
+     *
+     * time complexity: WC O(n), amortized O(log n)
+     *
+     * returns the new min_node of the heap after all the links.
+     */
     private HeapNode SuccessiveLinking() {
-
         int log_n = (int)(Math.ceil(Math.log(this.size + 1) / Math.log(2)));
         int roots_num_copy = this.roots_num;
         HeapNode[] buckets = new HeapNode[log_n];
@@ -192,6 +221,15 @@ public class FibonacciHeap
         return new_min;
     }
 
+    /**
+     * private HeapNode createHeapAndFindMin(HeapNode[] buckets)
+     *
+     * goes throw buckets array and creats a new heap.
+     *
+     * time complexity: O(log n)
+     *
+     * returns the minimal node in the array
+     */
     private HeapNode createHeapAndFindMin(HeapNode[] buckets) {
         this.first = null;
         this.roots_num = 0;
@@ -221,6 +259,16 @@ public class FibonacciHeap
         return min;
     }
 
+    /**
+     * private HeapNode link(HeapNode node1, HeapNode node2)
+     *
+     * given to trees of the same rank k, this function links them to a one tree of rank k + 1.
+     * the root of the new tree will be the node with the smaller key bewteen both of the roots.
+     *
+     * time complexity: O(1)
+     *
+     * returns the root of the new linked tree
+     */
     private HeapNode link(HeapNode node1, HeapNode node2){
         // make sure both trees are the same rank
         if(node1.getRank() != node2.getRank()) {
@@ -362,7 +410,7 @@ public class FibonacciHeap
     */
     public int potential() 
     {    
-        return this.roots_num + 2*this.marked_num;
+        return this.roots_num + 2 * this.marked_num;
     }
 
    /**
@@ -491,56 +539,7 @@ public class FibonacciHeap
        }
     }
 
-
-
     public static void main(String[] args) {
 
-        FibonacciHeap fibonacciHeap = new FibonacciHeap();
-        fibonacciHeap.insert(1);
-        fibonacciHeap.insert(2);
-        fibonacciHeap.insert(4);
-        fibonacciHeap.insert(435);
-        fibonacciHeap.deleteMin();
-
-//        ArrayList<Integer> numbers = new ArrayList<>();
-//
-//        numbers.add(1);
-//        numbers.add(2);
-//        numbers.add(4);
-//        numbers.add(3);
-//        numbers.add(0);
-//
-//        for (int i = 0; i < 5; i++) {
-//            numbers.add(i);
-//        }
-//
-//        Collections.shuffle(numbers);
-
-//        numbers.add(1);
-//        numbers.add(0);
-//        numbers.add(3);
-//        numbers.add(2);
-//        numbers.add(4);
-//        System.out.println(numbers);
-//        ;
-//
-//        for (int i = 0; i < 5; i++) {
-//            fibonacciHeap.insert(numbers.get(i));
-//        }
-//        fibonacciHeap.deleteMin();
-//        fibonacciHeap.deleteMin();
-//        fibonacciHeap.deleteMin();
-//
-//        /*for (int i = 0; i < 5; i++) {
-//            if (fibonacciHeap.findMin().getKey() != i) {
-//                System.out.println(i);
-//                System.out.println("wrong");
-//                return;
-//            }
-//            fibonacciHeap.deleteMin();
-//        }*/
-
-
     }
-
 }
