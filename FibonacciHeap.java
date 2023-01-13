@@ -294,7 +294,7 @@ public class FibonacciHeap
         root.setChild(left_child);
         left_child.setParent(root);
         root.setRank(root.getRank() + 1);
-        // !!!!!!!!!!! check if we need to change left_child mark filed !!!!!!!!
+        // !!!!!!!!!!! check if we need to change left_child mark filed + num_marked !!!!!!!!
         return root;
     }
 
