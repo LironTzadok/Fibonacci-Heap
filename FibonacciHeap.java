@@ -24,6 +24,7 @@ public class FibonacciHeap
         this.marked_num=0;
     }
 
+
     public HeapNode getMinNode() {
         return this.min_node;
     }
@@ -266,15 +267,15 @@ public class FibonacciHeap
     * Melds heap2 with the current heap.
     *
     */
-    public void meld (FibonacciHeap heap2)
+    public void meld(FibonacciHeap heap2)
     {
         //if one of the heaps are empty:
         if (heap2.isEmpty()){
             return;
         }
         if (this.isEmpty()){
-            this.first=heap2.getFirst();
-            this.min_node=heap2.getMinNode();
+            this.first = heap2.getFirst();
+            this.min_node = heap2.getMinNode();
         }
         else {
             //melding the two heaps one after another:
