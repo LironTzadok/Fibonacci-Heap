@@ -148,8 +148,7 @@ public class FibonacciHeap
             // changing "mark" field of the deleted node's children to false and changing their "parent" field to null
             for (int i = 1; i <= min.getRank(); i++){
                 if (child.marked){
-                    child.setMarked(false);
-                    this.count_marked--;
+                    setHeapNodeMarked(child, false);
                 }
                 child.setParent(null);
                 child = child.getNext();
@@ -424,24 +423,59 @@ public class FibonacciHeap
     */
     public void decreaseKey(HeapNode x, int delta)
     {    
-    	// !!!!!!!!!!!!!!! when writing a "Cut" method, remember to add a line: "count_total_cuts++" for "totalCuts" method!!!!!!!!!!
         x.setKey(x.getKey() - delta);
-        if (x.getKey() <= x.getParent().getKey()) {
+        if (x.getParent() == null || x.getKey() <= x.getParent().getKey()) {
             return;
         }
-        this.cascadingCut(x);
+        HeapNode parent = x.getParent();
+        this.cascadingCut(x, parent);
     }
 
-    private void cascadingCut(HeapNode x) {
-        HeapNode parent = x.getParent();
+    private void cascadingCut(HeapNode x, HeapNode parent) {
         this.cut(x, parent);
-        if(parent.getParent() != null){
-
+        HeapNode grandfather = parent.getParent();
+        if(grandfather != null){
+            if (!parent.isMarked()) {
+                setHeapNodeMarked(parent, true);
+            }
+            else {
+                cascadingCut(parent, grandfather);
+            }
         }
+    }
+
+    private void setHeapNodeMarked(HeapNode node, boolean value) {
+        boolean isNodeMarked = node.isMarked();
+        if (isNodeMarked != value)
+        {
+            count_marked += isNodeMarked ? -1 : 1;
+        }
+        node.setMarked(value);
     }
 
     private void cut(HeapNode x, HeapNode y) {
-
+        x.setParent(null);
+        setHeapNodeMarked(x, false);
+        y.setRank(y.getRank() - 1);
+        if(x.getNext() == x) {
+            y.setChild(null);
+        }
+        else {
+            HeapNode next = x.getNext();
+            HeapNode prev = x.getPrev();
+           if(y.getChild() == x) {
+                y.setChild(next);
+           }
+            prev.setNext(next);
+        }
+        // add x to roots list + define x as the new heap min_node if needed
+        this.first.getPrev().setNext(x);
+        x.setNext(this.first);
+        this.first = x;
+        if(x.getKey() < this.min_node.getKey()) {
+            this.min_node = x;
+        }
+        count_total_cuts ++;
     }
 
    /**
