@@ -1,4 +1,5 @@
 import java.lang.Math;
+import java.util.Arrays;
 
 /**
  * FibonacciHeap
@@ -12,6 +13,8 @@ public class FibonacciHeap
     private int size;
     private int count_roots;
     private int count_marked;
+    private static int count_total_links = 0;
+    private static int count_total_cuts = 0;
 
     public FibonacciHeap(){
         this.min_node = null;
@@ -165,14 +168,14 @@ public class FibonacciHeap
         }
         // set deleted node child to be null
         min.setChild(null);
-        // if first was the deleted node, replace it with it's perv
+        // if first was the deleted node, replace it with its prev
         if(this.first == min) {
             this.first = next;
         }
         // detach deleted node siblings
         min.setNext(null);
         min.setPrev(null);
-        // update counter fileds
+        // update counter fields
         this.count_roots += min.getRank() - 1;
         this.size -= 1;
         // set new min node and do successive linking
@@ -262,7 +265,7 @@ public class FibonacciHeap
      * private HeapNode link(HeapNode node1, HeapNode node2)
      *
      * given to trees of the same rank k, this function links them to a one tree of rank k + 1.
-     * the root of the new tree will be the node with the smaller key bewteen both of the roots.
+     * the root of the new tree will be the node with the smaller key between both of the roots.
      *
      * returns the root of the new linked tree
      *
@@ -293,6 +296,7 @@ public class FibonacciHeap
         root.setChild(left_child);
         left_child.setParent(root);
         root.setRank(root.getRank() + 1);
+        count_total_links++;
         // !!!!!!!!!!! check if we need to change left_child mark filed + num_marked !!!!!!!!
         return root;
     }
@@ -370,7 +374,7 @@ public class FibonacciHeap
         int max_rank=0;
         // if heap is empty:
         if (node == null) {
-            return new int[];
+            return new int[0];
         }
         // iterating through the heap's roots, searching for the max rank:
         while (count_roots_copy > 0) {
@@ -398,11 +402,16 @@ public class FibonacciHeap
     * Deletes the node x from the heap.
 	* It is assumed that x indeed belongs to the heap.
     *
-    * Complexity:
+    * time complexity: WC - O(n), amortized - O(log n)
     */
     public void delete(HeapNode x) 
-    {    
-    	return; // should be replaced by student code
+    {
+        // turning x to the node with minimal key:
+        if (this.min_node.key != x.getKey()){
+            decreaseKey(x, Integer.MAX_VALUE);
+        }
+        // delete x:
+        this.deleteMin();
     }
 
    /**
@@ -415,7 +424,8 @@ public class FibonacciHeap
     */
     public void decreaseKey(HeapNode x, int delta)
     {    
-    	return; // should be replaced by student code
+    	// when writing a "Cut" method, remember to add a line: "count_total_cuts++" for "totalCuts" method!!!!!!!!!!
+        return; // should be replaced by student code
     }
 
    /**
@@ -454,11 +464,11 @@ public class FibonacciHeap
     * trees of the same rank, and generates a tree of rank bigger by one, by hanging the
     * tree which has larger value in its root under the other tree.
     *
-    * Complexity:
+    * Complexity: O(1)
     */
     public static int totalLinks()
     {    
-    	return -345; // should be replaced by student code
+    	return count_total_links;
     }
 
    /**
@@ -468,11 +478,11 @@ public class FibonacciHeap
     * run-time of the program. A cut operation is the operation which disconnects a subtree
     * from its parent (during decreaseKey/delete methods).
     *
-    * Complexity:
+    * Complexity: O(1)
     */
     public static int totalCuts()
     {    
-    	return -456; // should be replaced by student code
+    	return count_total_cuts;
     }
 
      /**
@@ -578,6 +588,9 @@ public class FibonacciHeap
     }
 
     public static void main(String[] args) {
+
+        FibonacciHeap f = new FibonacciHeap();
+
 
     }
 }
