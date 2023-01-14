@@ -424,8 +424,24 @@ public class FibonacciHeap
     */
     public void decreaseKey(HeapNode x, int delta)
     {    
-    	// when writing a "Cut" method, remember to add a line: "count_total_cuts++" for "totalCuts" method!!!!!!!!!!
-        return; // should be replaced by student code
+    	// !!!!!!!!!!!!!!! when writing a "Cut" method, remember to add a line: "count_total_cuts++" for "totalCuts" method!!!!!!!!!!
+        x.setKey(x.getKey() - delta);
+        if (x.getKey() <= x.getParent().getKey()) {
+            return;
+        }
+        this.cascadingCut(x);
+    }
+
+    private void cascadingCut(HeapNode x) {
+        HeapNode parent = x.getParent();
+        this.cut(x, parent);
+        if(parent.getParent() != null){
+
+        }
+    }
+
+    private void cut(HeapNode x, HeapNode y) {
+
     }
 
    /**
@@ -437,7 +453,7 @@ public class FibonacciHeap
     */
     public int nonMarked() 
     {
-        return this.size-this.count_marked;
+        return this.size - this.count_marked;
     }
 
    /**
