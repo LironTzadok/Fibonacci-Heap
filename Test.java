@@ -1000,7 +1000,7 @@ public class Test {
     }
 
     static void addKeys(int start) {
-        for (int i = 0; i < 1000; i++) {//@@@@@@@ i<1000 @@@@@
+        for (int i = 0; i < 1000; i++) {
             heap.insert(start + i);
             fibonacciHeap.insert(start + i);
         }

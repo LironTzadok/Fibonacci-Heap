@@ -56,7 +56,7 @@ public class HeapPrinter {
         String title = String.format(" Key: %d ", heapNode.getKey());
         List<String> content = Arrays.asList(
                 String.format(" Rank: %d ", heapNode.getRank()),
-                String.format(" Marked: %b ", heapNode.getMarked()),
+                String.format(" Marked: %b ", heapNode.isMarked()),
                 String.format(" Parent: %s ", keyify.apply(heapNode::getParent)),
                 String.format(" Next: %s ", keyify.apply(heapNode::getNext)),
                 String.format(" Prev: %s ", keyify.apply(heapNode::getPrev)),

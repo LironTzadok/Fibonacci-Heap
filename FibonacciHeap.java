@@ -1,4 +1,5 @@
 import java.lang.Math;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -108,9 +109,7 @@ public class FibonacciHeap
         else {
             this.first.getPrev().setNext(new_heap_node);
             new_heap_node.setNext(this.first);
-            if (new_heap_node.getKey() < this.min_node.getKey()) {
-                this.min_node = new_heap_node;
-            }
+            this.findNewMin(new_heap_node);
         }
         this.first = new_heap_node;
         this.size += 1;
@@ -424,11 +423,22 @@ public class FibonacciHeap
     public void decreaseKey(HeapNode x, int delta)
     {    
         x.setKey(x.getKey() - delta);
-        if (x.getParent() == null || x.getKey() <= x.getParent().getKey()) {
+        HeapNode parent = x.getParent();
+        // x is one of the roots of the heap
+        if (parent == null) {
+            this.findNewMin(x);
             return;
         }
-        HeapNode parent = x.getParent();
+        if (x.getKey() >= parent.getKey()) {
+            return;
+        }
         this.cascadingCut(x, parent);
+    }
+
+    private void findNewMin(HeapNode node) {
+        if(node.getKey() < this.min_node.getKey()) {
+            this.min_node = node;
+        }
     }
 
     private void cascadingCut(HeapNode x, HeapNode parent) {
@@ -455,7 +465,7 @@ public class FibonacciHeap
 
     private void cut(HeapNode x, HeapNode y) {
         x.setParent(null);
-        setHeapNodeMarked(x, false);
+        this.setHeapNodeMarked(x, false);
         y.setRank(y.getRank() - 1);
         if(x.getNext() == x) {
             y.setChild(null);
@@ -472,9 +482,7 @@ public class FibonacciHeap
         this.first.getPrev().setNext(x);
         x.setNext(this.first);
         this.first = x;
-        if(x.getKey() < this.min_node.getKey()) {
-            this.min_node = x;
-        }
+        this.findNewMin(x);
         count_total_cuts ++;
     }
 
@@ -638,9 +646,29 @@ public class FibonacciHeap
     }
 
     public static void main(String[] args) {
-
+        Heap heap = new Heap();
         FibonacciHeap f = new FibonacciHeap();
-
-
+        HeapPrinter printer = new HeapPrinter(System.out);
+        for (int i = 0; i < 10; i++) {
+            heap.insert(0 + i);
+            f.insert(0 + i);
+        }
+        for (int i = 10; i >= 0; i--) {
+            heap.insert(30 + i);
+            f.insert(30 + i);
+        }
+        printer.print(f, false);
+        ArrayList<HeapNode> nodes = new ArrayList<>();
+        for (int i = 20; i < 26; i++) {
+            heap.insert(i);
+            nodes.add(f.insert(i));
+        }
+        for (int i = 0; i < 5; i++) {
+            if (heap.findMin() != f.findMin().getKey() || heap.size() != f.size()) {
+                System.out.println("badddd " + i);
+            }
+            heap.delete(i);
+            f.delete(nodes.get(i - 2000));
+        }
     }
 }
