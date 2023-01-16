@@ -1,6 +1,9 @@
+import com.sun.org.apache.xerces.internal.impl.dv.xs.SchemaDVFactoryImpl;
+
 import java.lang.Math;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 /**
  * FibonacciHeap
@@ -115,6 +118,23 @@ public class FibonacciHeap
         this.size += 1;
         this.count_roots += 1;
         return new_heap_node;
+    }
+
+    /**
+     * public HeapNode insert(HeapNode node)
+     *
+     * an override method insert that inserts a node to the heap and updates
+     his "child_pointer_for_kMin_method" field to node.child.
+     *
+     * this method is used for kMin method only!
+     *
+     * time complexity: O(1)
+     */
+
+    public HeapNode insert (HeapNode node) {
+        this.insert(node.getKey());
+        this.first.child_pointer_for_kMin_method = node.get_child_pointer_for_kMin_method();
+        return this.first;
     }
 
    /**
@@ -550,12 +570,42 @@ public class FibonacciHeap
     * The function should run in O(k*deg(H)). (deg(H) is the degree of the only tree in H.)
     * ###CRITICAL### : you are NOT allowed to change H.
       *
-      * Complexity:
+      * Complexity: O(k*deg(H))
     */
     public static int[] kMin(FibonacciHeap H, int k)
     {    
-        int[] arr = new int[100];
-        return arr; // should be replaced by student code
+        FibonacciHeap B = new FibonacciHeap();
+        int[] arr = new int[k];
+        int index_of_arr=0;
+        if (H.isEmpty()){
+            return arr;
+        }
+        HeapNode first_node_in_B = new HeapNode(H.getMinNode().getKey());
+        // updating field "child_pointer_for_kMin_method" that will hold to the child's pointer without
+        // affecting the structure of the heap, meaning without "child" field compromised:
+        first_node_in_B.set_child_pointer_for_kMin_method(H.getMinNode().getChild());
+        B.insert(first_node_in_B); // using an override method "insert"
+        for (int i = 0; i < k; i++){
+            // finding minimum in B and inserting it to the sorted arr:
+            HeapNode min_pointer_in_B = B.findMin();
+            arr[index_of_arr]=min_pointer_in_B.getKey();
+            index_of_arr++;
+            // inserting all of min's children to heap B:
+            HeapNode child = min_pointer_in_B.get_child_pointer_for_kMin_method();
+            if (child == null) {
+                B.deleteMin();
+                continue;
+            }
+            for (int j=0 ; j < child.getParent().getRank() ; j++) {
+                HeapNode child_for_heap_B = new HeapNode(child.getKey());
+                child_for_heap_B.set_child_pointer_for_kMin_method(child.getChild());
+                B.insert(child_for_heap_B);
+                child = child.getNext();
+            }
+            // deleting minimum from B and making B a binomial tree again:
+            B.deleteMin();
+        }
+        return arr;
     }
     
    /**
@@ -574,6 +624,7 @@ public class FibonacciHeap
         private HeapNode next;
         private HeapNode prev;
         private HeapNode parent;
+        private HeapNode child_pointer_for_kMin_method; // used for kMin method only
 
     	public HeapNode(int key) {
     		this.key = key;
@@ -583,6 +634,7 @@ public class FibonacciHeap
             this.next = null;
             this.prev = null;
             this.parent = null;
+            this.child_pointer_for_kMin_method = null;
     	}
 
     	public int getKey() {
@@ -643,32 +695,57 @@ public class FibonacciHeap
        public void setParent(HeapNode parent) {
            this.parent = parent;
        }
+
+       public HeapNode get_child_pointer_for_kMin_method() { return this.child_pointer_for_kMin_method; }
+
+       public void set_child_pointer_for_kMin_method (HeapNode child) { this.child_pointer_for_kMin_method = child; }
     }
 
     public static void main(String[] args) {
         Heap heap = new Heap();
         FibonacciHeap f = new FibonacciHeap();
-        HeapPrinter printer = new HeapPrinter(System.out);
-        for (int i = 0; i < 10; i++) {
-            heap.insert(0 + i);
-            f.insert(0 + i);
-        }
-        for (int i = 10; i >= 0; i--) {
-            heap.insert(30 + i);
-            f.insert(30 + i);
-        }
-        printer.print(f, false);
-        ArrayList<HeapNode> nodes = new ArrayList<>();
-        for (int i = 20; i < 26; i++) {
-            heap.insert(i);
-            nodes.add(f.insert(i));
-        }
-        for (int i = 0; i < 5; i++) {
-            if (heap.findMin() != f.findMin().getKey() || heap.size() != f.size()) {
-                System.out.println("badddd " + i);
-            }
-            heap.delete(i);
-            f.delete(nodes.get(i - 2000));
-        }
+        f.insert(1);
+        f.insert(2);
+        f.insert(3);
+        f.insert(4);
+        f.insert(5);
+        f.insert(6);
+        f.insert(7);
+        f.insert(8);
+        f.insert(9);
+        f.insert(10);
+        f.insert(11);
+        f.insert(12);
+        f.insert(13);
+        f.insert(14);
+        f.insert(15);
+        f.insert(16);
+        f.insert(17);
+        f.deleteMin();
+        System.out.println(Arrays.toString(kMin(f, 8)));
+
+
+//        HeapPrinter printer = new HeapPrinter(System.out);
+//        for (int i = 0; i < 10; i++) {
+//            heap.insert(0 + i);
+//            f.insert(0 + i);
+//        }
+//        for (int i = 10; i >= 0; i--) {
+//            heap.insert(30 + i);
+//            f.insert(30 + i);
+//        }
+//        printer.print(f, false);
+//        ArrayList<HeapNode> nodes = new ArrayList<>();
+//        for (int i = 20; i < 26; i++) {
+//            heap.insert(i);
+//            nodes.add(f.insert(i));
+//        }
+//        for (int i = 0; i < 5; i++) {
+//            if (heap.findMin() != f.findMin().getKey() || heap.size() != f.size()) {
+//                System.out.println("badddd " + i);
+//            }
+//            heap.delete(i);
+//            f.delete(nodes.get(i - 2000));
+//        }
     }
 }
