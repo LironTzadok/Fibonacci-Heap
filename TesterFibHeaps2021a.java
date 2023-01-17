@@ -84,7 +84,7 @@ public class TesterFibHeaps2021a {
                 break;
         }
         if (thread.isAlive()) {
-            thread.stop();
+            //thread.stop();
             success[idx] = TEST_EXCEPTION_VALUE;
         }
     }

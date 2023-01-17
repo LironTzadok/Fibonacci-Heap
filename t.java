@@ -137,7 +137,9 @@ public class t {
         heap.insert(1);
         heap.insert(2);
         heap.insert(7);
+        t.print(heap, false);
         heap.deleteMin();
+        t.print(heap, false);
         FibonacciHeap.HeapNode n2 = heap.insert(500);
 
         stream.println("Printing in regular mode:");
@@ -147,15 +149,16 @@ public class t {
 
         FibonacciHeap heap2 = new FibonacciHeap();
         heap2.meld(heap);
+        System.out.println("heap 2:");
         t.print(heap2, false);
         System.out.println(Arrays.toString(heap2.countersRep()));
         System.out.println(heap2.potential());
         heap2.decreaseKey(n0, 1);
         t.print(heap2, false);
-        heap2.decreaseKey(n0, 13);
-        t.print(heap2, false);
+        heap2.decreaseKey(n0, 15);
+        t.print(heap2, true);
         heap2.delete(n1);
-        t.print(heap2, false);
+        t.print(heap2, true);
         System.out.println(heap2.potential());
         heap2.delete(n2);
         t.print(heap2, false);
