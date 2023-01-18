@@ -160,12 +160,11 @@ public class FibonacciHeap
                 prev.setNext(child);
             }
             // changing "mark" field of the deleted node's children to false and changing their "parent" field to null
+            HeapNode child_for_loop = child;
             for (int i = 1; i <= min.getRank(); i++){
-                if (child.marked){
-                    setHeapNodeMarked(child, false);
-                }
-                child.setParent(null);
-                child = child.getNext();
+                setHeapNodeMarked(child_for_loop, false);
+                child_for_loop.setParent(null);
+                child_for_loop = child_for_loop.getNext();
             }
         }
         // min node rank is 0
@@ -459,7 +458,7 @@ public class FibonacciHeap
         this.cut(x, parent);
         HeapNode grandfather = parent.getParent();
         if(grandfather != null){
-            if (!parent.isMarked()) {
+            if (!parent.getMarked()) {
                 setHeapNodeMarked(parent, true);
             }
             else {
@@ -469,7 +468,7 @@ public class FibonacciHeap
     }
 
     private void setHeapNodeMarked(HeapNode node, boolean value) {
-        boolean isNodeMarked = node.isMarked();
+        boolean isNodeMarked = node.getMarked();
         if (isNodeMarked != value)
         {
             count_marked += isNodeMarked ? -1 : 1;
@@ -648,7 +647,7 @@ public class FibonacciHeap
            this.rank = rank;
        }
 
-       public boolean isMarked() {
+       public boolean getMarked() {
            return this.marked;
        }
 
