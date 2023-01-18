@@ -436,12 +436,6 @@ public class FibonacciHeap
     * Complexity:
     */
     public void decreaseKey(HeapNode x, int delta) {
-        if (x.getKey() < 0) {
-            x.setKey(Integer.MIN_VALUE);
-        }
-        else {
-            x.setKey(x.getKey() - delta);
-        }
         HeapNode parent = x.getParent();
         // x is one of the roots of the heap
         if (parent == null) {
