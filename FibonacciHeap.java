@@ -159,6 +159,9 @@ public class FibonacciHeap
                 child.getPrev().setNext(next);
                 prev.setNext(child);
             }
+            if (this.first == min) {
+                this.first = child;
+            }
             // changing "mark" field of the deleted node's children to false and changing their "parent" field to null
             HeapNode child_for_loop = child;
             for (int i = 1; i <= min.getRank(); i++){
@@ -176,14 +179,13 @@ public class FibonacciHeap
             // connect deleted root siblings
             else {
                 prev.setNext(next);
+                if(this.first == min) {
+                    this.first = prev;
+                }
             }
         }
         // set deleted node child to be null
         min.setChild(null);
-        // if first was the deleted node, replace it with its prev
-        if(this.first == min) {
-            this.first = next;
-        }
         // detach deleted node siblings
         min.setNext(null);
         min.setPrev(null);
@@ -433,9 +435,13 @@ public class FibonacciHeap
     *
     * Complexity:
     */
-    public void decreaseKey(HeapNode x, int delta)
-    {    
-        x.setKey(x.getKey() - delta);
+    public void decreaseKey(HeapNode x, int delta) {
+        if (x.getKey() < 0) {
+            x.setKey(Integer.MIN_VALUE);
+        }
+        else {
+            x.setKey(x.getKey() - delta);
+        }
         HeapNode parent = x.getParent();
         // x is one of the roots of the heap
         if (parent == null) {
