@@ -158,6 +158,9 @@ public class FibonacciHeap
             else {
                 child.getPrev().setNext(next);
                 prev.setNext(child);
+                if (min == this.first) {
+                    this.first = child;
+                }
             }
             // changing "mark" field of the deleted node's children to false and changing their "parent" field to null
             HeapNode child_for_loop = child;
@@ -176,14 +179,13 @@ public class FibonacciHeap
             // connect deleted root siblings
             else {
                 prev.setNext(next);
+                if (min == this.first) {
+                    this.first = next;
+                }
             }
         }
         // set deleted node child to be null
         min.setChild(null);
-        // if first was the deleted node, replace it with its prev
-        if(this.first == min) {
-            this.first = next;
-        }
         // detach deleted node siblings
         min.setNext(null);
         min.setPrev(null);
