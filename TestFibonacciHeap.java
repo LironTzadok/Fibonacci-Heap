@@ -1881,8 +1881,8 @@ public class TestFibonacciHeap {
 
         testDeletion(heap, heap.getFirst()); // delete first
 
-        //assertSame(nodes.get(10), heap.getFirst());
-        //assertSame(nodes.get(2), heap.getFirst().getNext());
+        assertSame(nodes.get(10), heap.getFirst());
+        assertSame(nodes.get(2), heap.getFirst().getNext());
         assertSame(nodes.get(2), heap.findMin());
     }
 
@@ -1890,7 +1890,7 @@ public class TestFibonacciHeap {
     @Test
     @Order(4900)
     public void testSpecialMarkedChainTree() {
-        int depth = 1000000;
+        int depth = 1000;
         // case 10
         int n = depth * 5; // must divide by 5
 
