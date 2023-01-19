@@ -420,9 +420,7 @@ public class FibonacciHeap
     public void delete(HeapNode x)
     {
         // turning x to the node with minimal key:
-        if (this.min_node.getKey() != x.getKey()){
-            decreaseKey(x, Integer.MAX_VALUE);
-        }
+        decreaseKey(x, Integer.MIN_VALUE);
         // delete x:
         this.deleteMin();
     }
@@ -437,7 +435,12 @@ public class FibonacciHeap
      */
     public void decreaseKey(HeapNode x, int delta)
     {
-        x.setKey(x.getKey() - delta);
+        if (delta == Integer.MIN_VALUE) {
+            x.setKey(delta);
+        }
+        else {
+            x.setKey(x.getKey() -delta);
+        }
         HeapNode parent = x.getParent();
         // x is one of the roots of the heap
         if (parent == null) {

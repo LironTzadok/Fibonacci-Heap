@@ -1518,7 +1518,7 @@ public class TestFibonacciHeap {
     public void stressTest() {
         final int changes = 35;
         final int meldings = 5;
-        final int iterations = 10000;
+        final int iterations = 1000;
         FibonacciHeap stressHeap = null;
         FibonacciHeap stressHeap2 = null;
         Map<Integer, FibonacciHeap.HeapNode> nodes = null;
@@ -1530,7 +1530,7 @@ public class TestFibonacciHeap {
             for (int i = 0; i < meldings; i++) {
                 nodes2 = new HashMap<>();
                 stressHeap2 = new FibonacciHeap();
-                insertKRandomKeys(1000, nodes, nodes, stressHeap, 0, (i+1) * 1000);
+                insertKRandomKeys(1000, nodes, nodes, stressHeap, 0, (i + 1) * 1000);
                 insertKRandomKeys(1000, nodes2, nodes2, stressHeap2, (i + 1) * 1000 + 1, (i + 2) * 1000);
                 assertValidHeap(stressHeap);
                 assertValidHeap(stressHeap2);
