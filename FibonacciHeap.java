@@ -42,24 +42,6 @@ public class FibonacciHeap
     }
 
     /**
-     * public void setFirst()
-     *
-     * sets first filed to a given node
-     */
-    public void setFirst(HeapNode first) {
-        this.first = first;
-    }
-
-    /**
-     * public void setSize()
-     *
-     * sets size filed to a given number
-     */
-    public void setSize(int size) {
-        this.size = size;
-    }
-
-    /**
      * public int getRootsNum()
      *
      * returns the number of roots in the heap
@@ -71,7 +53,7 @@ public class FibonacciHeap
     /**
      * public int getMarkedNum()
      *
-     * ???
+     * returns the number of marked nodes in the heap
      */
     public int getMarkedNum(){
         return this.count_marked;
@@ -701,6 +683,32 @@ public class FibonacciHeap
     }
 
     public static void main(String[] args) {
+
+        int m = (int) Math.pow(2, 5);
+        //int log_m = (int) (Math.log(m) / Math.log(2));
+        FibonacciHeap f = new FibonacciHeap();
+        HeapNode[] pointers = new HeapNode[m];
+        long begin = System.currentTimeMillis();
+
+        for (int i = m - 1; i >= -1; i--) {
+        FibonacciHeap.HeapNode node = f.insert(i);
+        if (i != -1) {
+            pointers[i] = node;
+        }
+        }
+        f.deleteMin();
+        int log2= (int) (Math.log(m) / Math. log(2));
+        for (int i=log2; i>=1; i--){
+            int index = m-(int)Math.pow(2,i) + 1;
+            f.decreaseKey(pointers[index], m+1);
+        }
+        long end = System.currentTimeMillis();
+        long time = end-begin;
+        //f.decreaseKey(pointers[m-2],m+1);
+        System.out.println(time);
+        System.out.println("Total links: " + FibonacciHeap.totalLinks());
+        System. out.println("Total cuts: " + FibonacciHeap.totalCuts());
+        System.out.println("Potential:" + f.potential());
 
     }
 }
