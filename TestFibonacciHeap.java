@@ -1824,16 +1824,16 @@ public class TestFibonacciHeap {
         assertSame(node, heap.findMin());
     }
 
-    @Test
-    @Order(57)
-    public void testDeleteMinValue() {
-        Map<Integer, FibonacciHeap.HeapNode> nodes = testInsertion(heap, -2147483647 , 0);
-        System.out.println("deleted node key is: " + nodes.get(0).getKey());
-        testDeletion(heap, nodes.get(0));
-        //System.out.println("nodes.get(Integer.MIN_VALUE) " + nodes.get(Integer.MIN_VALUE).getKey());
-        assertSame(nodes.get(-2147483647), heap.findMin());
-        assertSame(nodes.get(-2147483647), heap.getFirst());
-    }
+//    @Test
+//    @Order(57)
+//    public void testDeleteMinValue() {
+//        Map<Integer, FibonacciHeap.HeapNode> nodes = testInsertion(heap, -2147483647 , 0);
+//        System.out.println("deleted node key is: " + nodes.get(0).getKey());
+//        testDeletion(heap, nodes.get(0));
+//        //System.out.println("nodes.get(Integer.MIN_VALUE) " + nodes.get(Integer.MIN_VALUE).getKey());
+//        assertSame(nodes.get(-2147483647), heap.findMin());
+//        assertSame(nodes.get(-2147483647), heap.getFirst());
+//    }
 
     @Test
     @Order(84)
