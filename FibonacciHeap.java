@@ -1,3 +1,8 @@
+//username - liront
+//id1      - 208005835
+//name1    - Liron Tzadok
+// id2      - 208634766
+//name2    - Tal Ben Tov
 import java.lang.Math;
 
 /**
@@ -413,7 +418,7 @@ public class FibonacciHeap
      * Decreases the key of the node x by a non-negative value delta. The structure of the heap should be updated
      * to reflect this change (for example, the cascading cuts procedure should be applied if needed).
      *
-     * Complexity:
+     * time complexity: WC O(n), amortized O(1)
      */
     public void decreaseKey(HeapNode x, int delta)
     {
@@ -435,12 +440,29 @@ public class FibonacciHeap
         this.cascadingCut(x, parent);
     }
 
+    /**
+     * private void findNewMin(HeapNode node)
+     *
+     * compares current heap's min_node key with given node's key. if the second is smaller, the min_node
+     * becomes to the given node.
+     *
+     * Complexity: O(1)
+     */
     private void findNewMin(HeapNode node) {
         if(node.getKey() < this.min_node.getKey()) {
             this.min_node = node;
         }
     }
 
+    /**
+     * private void cascadingCut(HeapNode x, HeapNode parent)
+     *
+     * cuts the first node from the second node. if the second node have lost 2 children after this cut,
+     * it continues to cut links between the parent and its grandfather, until the grandfather is null or until parent
+     * did not lose 2 children.
+     *
+     * time complexity: WC O(n), amortized O(1)
+     */
     private void cascadingCut(HeapNode x, HeapNode parent) {
         this.cut(x, parent);
         HeapNode grandfather = parent.getParent();
@@ -454,6 +476,14 @@ public class FibonacciHeap
         }
     }
 
+    /**
+     * private void setHeapNodeMarked(HeapNode node, boolean value)
+     *
+     * changes the given node "mark" filed according to the given value. if mark filed was changed, it updates the
+     * "count_mark" filed.
+     *
+     * Complexity: O(1)
+     */
     private void setHeapNodeMarked(HeapNode node, boolean value) {
         boolean isNodeMarked = node.getMarked();
         if (isNodeMarked != value)
@@ -463,6 +493,13 @@ public class FibonacciHeap
         node.setMarked(value);
     }
 
+    /**
+     * private void cut(HeapNode x, HeapNode y)
+     *
+     * cuts a node from its parent and adds the node to the root's list of the heap.
+     *
+     * Complexity: O(1)
+     */
     private void cut(HeapNode x, HeapNode y) {
         x.setParent(null);
         this.setHeapNodeMarked(x, false);
