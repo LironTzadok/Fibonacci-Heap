@@ -149,7 +149,7 @@ public class FibonacciHeap
         HeapNode prev = min.getPrev();
 
         // if min_node has children, they become roots
-        if (min.getRank() != 0) {
+        if (child != null) {
             // if min_node is the only root in the heap, it's children become the only roots of the heap
             if (this.count_roots == 1) {
                 this.first = child;
