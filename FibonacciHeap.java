@@ -136,7 +136,7 @@ public class FibonacciHeap
         HeapNode prev = min.getPrev();
 
         // if min_node has children, they become roots
-        if (child != null) {
+        if (min.getRank() != 0) {
             // if min_node is the only root in the heap, it's children become the only roots of the heap
             if (this.count_roots == 1) {
                 this.first = child;
@@ -719,33 +719,4 @@ public class FibonacciHeap
         public void set_child_pointer_for_kMin_method (HeapNode child) { this.child_pointer_for_kMin_method = child; }
     }
 
-    public static void main(String[] args) {
-
-        int m = (int) Math.pow(2, 5);
-        //int log_m = (int) (Math.log(m) / Math.log(2));
-        FibonacciHeap f = new FibonacciHeap();
-        HeapNode[] pointers = new HeapNode[m];
-        long begin = System.currentTimeMillis();
-
-        for (int i = m - 1; i >= -1; i--) {
-        FibonacciHeap.HeapNode node = f.insert(i);
-        if (i != -1) {
-            pointers[i] = node;
-        }
-        }
-        f.deleteMin();
-        int log2= (int) (Math.log(m) / Math. log(2));
-        for (int i=log2; i>=1; i--){
-            int index = m-(int)Math.pow(2,i) + 1;
-            f.decreaseKey(pointers[index], m+1);
-        }
-        long end = System.currentTimeMillis();
-        long time = end-begin;
-        //f.decreaseKey(pointers[m-2],m+1);
-        System.out.println(time);
-        System.out.println("Total links: " + FibonacciHeap.totalLinks());
-        System. out.println("Total cuts: " + FibonacciHeap.totalCuts());
-        System.out.println("Potential:" + f.potential());
-
-    }
 }
